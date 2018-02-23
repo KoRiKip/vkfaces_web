@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demo</title>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/app.css') }}">
+    <style>
+.image_container {
+    width: 400px;
+    height: 400px;
+    border: solid;
+    background-color: darkgrey
+}
+
+.image {
+    max-width: 100px;
+    max-height: 100px
+}
+
+.image_uploader {
+    border: medium black;
+    display: inline-block;
+}
+
+.class_caption {
+    margin:auto;
+}
+    </style>
+</head>
+
+<body>
+<div class="navbar" align="center">
+{% for class_name in class_names %}
+    <div class="image_uploader">
+        <div class="class_caption">Class {{ class_name }}</div>
+        <div id="left" class="image_container">
+            {% for image_file in image_files[class_name] %}
+                <img src="{{ image_file }}" class="image">
+            {% endfor %}
+        </div>
+        <div align="bottom">
+            <form action="/upload_train" method="post" enctype="multipart/form-data">
+                <span>
+                    <input type="file" name="image">
+                </span>
+                <input type="text" name="class" value={{ class_name }} hidden>
+                <input type="submit" value="Upload your train image">
+            </form>
+            <form action="/clear" method="post" enctype="multipart/form-data">
+                <input type="text" name="class" value={{ class_name }} hidden>
+                <input type="submit" value="Clear all">
+            </form>
+        </div>
+    </div>
+{% endfor %}
+
+    <div name="test" class="image_container image" style="max-height: 140px; max-width: 120px; ">
+        {% if test_image %}
+            <img src="{{ test_image }}" class="image">
+            <div> It's class {{ class_test }} with {{ confidence*100 }}% confidence </div>
+        {% else %}
+            <div style="height: 140px;"></div>
+        {% endif %}
+                    <form action="/upload_test" method="post" enctype="multipart/form-data">
+                    <span>
+                        <input type="file" name="image">
+                    </span>
+                    <input type="submit" value="Upload your test image">
+                </form>
+    </div>
+</div>
+
+</body>
+</html>
