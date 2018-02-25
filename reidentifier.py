@@ -7,6 +7,9 @@ import sys
 import os
 os.environ['GLOG_minloglevel'] = '3'
 import numpy as np
+
+if 'CAFFE_DIR' in os.environ:
+    sys.path.append(os.path.join(os.environ['CAFFE_DIR'], 'python'))
 import caffe
 
 # The caffe module needs to be on the Python path; we'll add it here explicitly.
@@ -87,8 +90,10 @@ class Reidentifier:
         ])
         crop = crop.astype(int)
 
-        isCropNeeded = testImage.shape[0] != self.net.blobs['data'].data.shape[2] or testImage.shape[1] != \
-                                                                                     self.net.blobs['data'].data.shape[3]
+        #isCropNeeded = testImage.shape[0] != self.net.blobs['data'].data.shape[2] or testImage.shape[1] != \
+        #                                                                             self.net.blobs['data'].data.shape[3]
+        isCropNeeded = False
+
         trainImages = getImages(train_image_dir)
         print(trainImages)
 
@@ -105,11 +110,12 @@ class Reidentifier:
         #similar = cosine_similarity(np.array(testDescriptors[testPath]).reshape(1,-1), trainDescriptors.values())[0]
         descriptor = self.get_descriptor(self.args, caffe, crop, testImagePath, self.net, self.transformer)
         similar = cosine_similarity(np.array(descriptor).reshape(1, -1), trainDescriptors.values())[0]
+        print(similar)
         idx = similar.argsort()[::-1]
         class_name = trainDescriptors.keys()[idx[0]]
         class_name = os.path.dirname(class_name)
         class_name = os.path.basename(class_name)
-        return class_name
+        return class_name, similar[idx[0]]
 
     def getDescriptors(self, args, images, caffe, net, transformer, crop=None):
         descriptors = {}
@@ -123,11 +129,12 @@ class Reidentifier:
         return descriptors
 
     def get_descriptor(self, args, caffe, crop, imagePath, net, transformer):
-        self.aligner.align(imagePath)  # in-place aligner
-        image = caffe.io.load_image(imagePath)
-        if crop is not None:
-            # central crop
-            image = image[crop[0]:crop[2], crop[1]:crop[3], :]
+        image = self.aligner.align(imagePath).astype(np.float32)
+        image /= 255
+        #image = caffe.io.load_image(imagePath)
+        #if crop is not None:
+        #   # central crop
+        #   image = image[crop[0]:crop[2], crop[1]:crop[3], :]
         transformed_image = transformer.preprocess('data', image)
         # copy the image data into the memory allocated for the net
         net.blobs['data'].data[...] = transformed_image
@@ -147,7 +154,7 @@ def human_numeric_sort(l):
 
 def getImages(path):
     images = {}
-    for folder in glob.glob(os.path.join(path, '*')):
+    for folder in glob.glob(os.path.join(path, '*/')):
         images[folder] = []
         for imagePath in glob.glob(os.path.join(folder, '*')):
             images[folder].append(imagePath)

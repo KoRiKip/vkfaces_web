@@ -33,10 +33,6 @@ class Aligner:
 
     def align(self, imgName):
 
-        print('-----------')
-        print('-----------')
-        print('-----------')
-        print(imgName)
         if not os.path.isfile(imgName):
             raise Exception("no file")
 
@@ -52,7 +48,7 @@ class Aligner:
             #outBgr = cv2.cvtColor(outRgb, cv2.COLOR_RGB2BGR)
             #cv2.imwrite(imgName, outBgr)
 
-            cv2.imwrite(imgName, outRgb)
+            #cv2.imwrite(imgName, outRgb)
             return outRgb
 
         if outRgb is None and self.args.verbose:
