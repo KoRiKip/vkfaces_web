@@ -8,3 +8,7 @@ TODO korabelnikov:
 
 ML:
 face detection via mtcnn in https://github.com/davidsandberg/facenet/tree/master/src/align
+
+Запускает сервер приложения файл webform.py. В нем описываются возможные запросы. Вместо машинленига сейчас заглушка 
+from face import classify
+функция classify(im, k) принимает фотку или путь к ней  и к - количество запрашиваемых ответов. Возвращает айдишники в виде интов и уверенность в видео числа от 0 до 1.
