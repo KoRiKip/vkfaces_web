@@ -30,30 +30,21 @@
 
 <body>
 <div class="navbar" align="center">
-{% for class_name in class_names %}
     <div class="image_uploader">
-        <div class="class_caption">Class {{ class_name }}</div>
+        <div class="class_caption">Class </div>
         <div id="left" class="image_container">
-            {% for image_file in image_files[class_name] %}
+            {% for image_file in ['file1', 'fil2'] %}
                 <img src="{{ image_file }}" class="image">
             {% endfor %}
         </div>
         <div align="bottom">
-            <form action="/upload_train" method="post" enctype="multipart/form-data">
-                <span>
-                    <input type="file" name="image">
-                </span>
-                <input type="text" name="class" value={{ class_name }} hidden>
-                <input type="submit" value="Upload your train image">
-            </form>
             <form action="/clear" method="post" enctype="multipart/form-data">
-                <input type="text" name="class" value={{ class_name }} hidden>
+                <input type="text" name="class" value='123' hidden>
                 <input type="submit" value="Clear all">
             </form>
         </div>
     </div>
-{% endfor %}
-
+    <!--
     <div name="test" class="image_container image" style="max-height: 140px; max-width: 120px; ">
         {% if test_image %}
             <img src="{{ test_image }}" class="image">
@@ -68,6 +59,7 @@
                     <input type="submit" value="Upload your test image">
                 </form>
     </div>
+    !-->
 </div>
 
 </body>
