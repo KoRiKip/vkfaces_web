@@ -1,4 +1,9 @@
 sudo pip install sklearn numpy scikit-image
 
-export CAFFE_DIR=/media/a/faces/caffe-master
+cd ml
+git clone https://github.com/davidsandberg/facenet.git
+cd facenet
+git checkout 096ed77
+cd ../..
+
 python webform.py
