@@ -32,7 +32,10 @@ def upload_test():
             file.save(f)
             filename = url_for('static', filename='uploads/' + os.path.basename(f))
             k = 20
-            ids, conf = classify(filename, k)
+            try:
+                ids, conf = classify(filename, k)
+            except RuntimeError as e:
+                return e.args[0]
             return render_template('index.html', image_files=filename, ids=ids, confidence=conf)
 
     return render_template('index.html')
