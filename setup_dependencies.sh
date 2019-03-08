@@ -1,4 +1,4 @@
-sudo pip install sklearn numpy scikit-image
+sudo pip install sklearn numpy scikit-image flask flask-socketio
 
 cd ml
 git clone https://github.com/davidsandberg/facenet.git facenet_repo

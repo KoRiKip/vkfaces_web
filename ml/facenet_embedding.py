@@ -43,7 +43,7 @@ def resize_crop(im, image_size):
     return resized
 
 
-def im_to_embedding(ims):
+def im_to_embedding(ims, image_size):
     ims = [facenet.prewhiten(im) for im in ims]
     ims = [resize_crop(im, image_size)/255 - 0.5 for im in ims]
     ims = np.array(ims)
@@ -52,6 +52,7 @@ def im_to_embedding(ims):
     return facenet_run(ims)
 
 def dist(em1, em2):
+    assert em1.shape == em2.shape
     return facenet.distance(np.expand_dims(em1, 0), np.expand_dims(em2, 0))[0]
 
 

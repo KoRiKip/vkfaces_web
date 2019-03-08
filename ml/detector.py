@@ -9,7 +9,7 @@ detector = MTCNN(min_face_size=minsize, steps_threshold=threshold, scale_factor=
 margin = 44
 
 
-def get_faces(im, margin):
+def get_faces(im, margin=margin):
     if len(im.shape) == 2:
         im = np.stack([im, im, im], axis=2)  # make it rgb from grayscaled
     faces = detector.detect_faces(im)
